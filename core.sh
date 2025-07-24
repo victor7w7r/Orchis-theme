@@ -143,20 +143,17 @@ install() {
     cp -r "$SRC_DIR/xfwm4/svg/assets${ELSE_LIGHT:-}-mac/"*.svg                               "$THEME_DIR/xfwm4"
     cp -r "$SRC_DIR/xfwm4/svg/assets${ELSE_LIGHT:-}-mac-hdpi/"*.svg                          "$THEME_DIR-hdpi/xfwm4"
     cp -r "$SRC_DIR/xfwm4/svg/assets${ELSE_LIGHT:-}-mac-xhdpi/"*.svg                         "$THEME_DIR-xhdpi/xfwm4"
-    mv -f "$THEME_DIR/xfwm4/button-mac-active.xpm"                                           "$THEME_DIR/xfwm4/button-active.xpm"
-    mv -f "$THEME_DIR-hdpi/xfwm4/button-mac-active.xpm"                                      "$THEME_DIR-hdpi/xfwm4/button-active.xpm"
-    mv -f "$THEME_DIR-xhdpi/xfwm4/button-mac-active.xpm"                                     "$THEME_DIR-xhdpi/xfwm4/button-active.xpm"
+    cp -f "$THEME_DIR/xfwm4/button-mac-inactive.xpm"                                         "$THEME_DIR/xfwm4/button-active.xpm"
+    cp -f "$THEME_DIR-hdpi/xfwm4/button-mac-inactive.xpm"                                    "$THEME_DIR-hdpi/xfwm4/button-active.xpm"
+    cp -f "$THEME_DIR-xhdpi/xfwm4/button-mac-inactive.xpm"                                   "$THEME_DIR-xhdpi/xfwm4/button-active.xpm"
     mv -f "$THEME_DIR/xfwm4/button-mac-inactive.xpm"                                         "$THEME_DIR/xfwm4/button-inactive.xpm"
     mv -f "$THEME_DIR-hdpi/xfwm4/button-mac-inactive.xpm"                                    "$THEME_DIR-hdpi/xfwm4/button-inactive.xpm"
     mv -f "$THEME_DIR-xhdpi/xfwm4/button-mac-inactive.xpm"                                   "$THEME_DIR-xhdpi/xfwm4/button-inactive.xpm"
+    xfwm_button
   else
     cp -r "$SRC_DIR/xfwm4/svg/assets${ELSE_LIGHT:-}/"*.svg                                   "$THEME_DIR/xfwm4"
     cp -r "$SRC_DIR/xfwm4/svg/assets${ELSE_LIGHT:-}-hdpi/"*.svg                              "$THEME_DIR-hdpi/xfwm4"
     cp -r "$SRC_DIR/xfwm4/svg/assets${ELSE_LIGHT:-}-xhdpi/"*.svg                             "$THEME_DIR-xhdpi/xfwm4"
-  fi
-
-  if [[ "$macstyle" == "true" && "$ctype" != '' ]] ; then
-    xfwm_button
   fi
 
   mkdir -p                                                                                   "$THEME_DIR/cinnamon"
@@ -227,39 +224,20 @@ link_libadwaita() {
 
   [[ ! -d "${HOME}/.config/gtk-4.0" ]] && mkdir -p                              "${HOME}/.config/gtk-4.0"
   rm -rf "${HOME}/.config/gtk-4.0/"{assets,gtk.css,gtk-dark.css}
-  ln -sf "${THEME_DIR}/gtk-4.0/assets"                                          "${HOME}/.config/gtk-4.0/assets"
-  ln -sf "${THEME_DIR}/gtk-4.0/gtk.css"                                         "${HOME}/.config/gtk-4.0/gtk.css"
-  ln -sf "${THEME_DIR}/gtk-4.0/gtk-dark.css"                                    "${HOME}/.config/gtk-4.0/gtk-dark.css"
+  cp -rf "${THEME_DIR}/gtk-4.0/assets"                                          "${HOME}/.config/gtk-4.0/assets"
+  cp -f "${THEME_DIR}/gtk-4.0/gtk.css"                                         "${HOME}/.config/gtk-4.0/gtk.css"
+  cp -f "${THEME_DIR}/gtk-4.0/gtk-dark.css"                                    "${HOME}/.config/gtk-4.0/gtk-dark.css"
 }
 
 xfwm_button() {
-  case "$ctype" in
-    '')
-      button_close="#fd5f51"
-      button_max="#38c76a"
-      button_min="#fdbe04"
-      ;;
-    -Nord)
-      button_close="#bf616a"
-      button_max="#a3be8c"
-      button_min="#ebcb8b"
-      ;;
-    -Dracula)
-      if [[ "$color" == '-Light' ]]; then
-        button_close="#ed5d5d"
-        button_max="#43db68"
-        button_min="#e3d93b"
-      else
-        button_close="#f44d4d"
-        button_max="#4be772"
-        button_min="#e8f467"
-      fi
-      ;;
-  esac
+  button_close="#fd5f51"
+  button_close_pref="#4d4d4d"
+  button_max="#4d4d4d"
+  button_min="#4d4d4d"
 
   sed -i "s/#fd5f51/${button_close}/g"                                          "${THEME_DIR}/xfwm4/close-active.svg"
-  sed -i "s/#fd5f51/${button_close}/g"                                          "${THEME_DIR}/xfwm4/close-prelight.svg"
-  sed -i "s/#fd5f51/${button_close}/g"                                          "${THEME_DIR}/xfwm4/close-pressed.svg"
+  sed -i "s/#fd5f51/${button_close_pref}/g"                                          "${THEME_DIR}/xfwm4/close-prelight.svg"
+  sed -i "s/#fd5f51/${button_close_pref}/g"                                          "${THEME_DIR}/xfwm4/close-pressed.svg"
   sed -i "s/#38c76a/${button_max}/g"                                            "${THEME_DIR}/xfwm4/maximize-active.svg"
   sed -i "s/#38c76a/${button_max}/g"                                            "${THEME_DIR}/xfwm4/maximize-prelight.svg"
   sed -i "s/#38c76a/${button_max}/g"                                            "${THEME_DIR}/xfwm4/maximize-pressed.svg"
@@ -271,8 +249,8 @@ xfwm_button() {
   sed -i "s/#fdbe04/${button_min}/g"                                            "${THEME_DIR}/xfwm4/hide-pressed.svg"
 
   sed -i "s/#fd5f51/${button_close}/g"                                          "${THEME_DIR}-hdpi/xfwm4/close-active.svg"
-  sed -i "s/#fd5f51/${button_close}/g"                                          "${THEME_DIR}-hdpi/xfwm4/close-prelight.svg"
-  sed -i "s/#fd5f51/${button_close}/g"                                          "${THEME_DIR}-hdpi/xfwm4/close-pressed.svg"
+  sed -i "s/#fd5f51/${button_close_pref}/g"                                          "${THEME_DIR}-hdpi/xfwm4/close-prelight.svg"
+  sed -i "s/#fd5f51/${button_close_pref}/g"                                          "${THEME_DIR}-hdpi/xfwm4/close-pressed.svg"
   sed -i "s/#38c76a/${button_max}/g"                                            "${THEME_DIR}-hdpi/xfwm4/maximize-active.svg"
   sed -i "s/#38c76a/${button_max}/g"                                            "${THEME_DIR}-hdpi/xfwm4/maximize-prelight.svg"
   sed -i "s/#38c76a/${button_max}/g"                                            "${THEME_DIR}-hdpi/xfwm4/maximize-pressed.svg"
@@ -284,8 +262,8 @@ xfwm_button() {
   sed -i "s/#fdbe04/${button_min}/g"                                            "${THEME_DIR}-hdpi/xfwm4/hide-pressed.svg"
 
   sed -i "s/#fd5f51/${button_close}/g"                                          "${THEME_DIR}-xhdpi/xfwm4/close-active.svg"
-  sed -i "s/#fd5f51/${button_close}/g"                                          "${THEME_DIR}-xhdpi/xfwm4/close-prelight.svg"
-  sed -i "s/#fd5f51/${button_close}/g"                                          "${THEME_DIR}-xhdpi/xfwm4/close-pressed.svg"
+  sed -i "s/#fd5f51/${button_close_pref}/g"                                          "${THEME_DIR}-xhdpi/xfwm4/close-prelight.svg"
+  sed -i "s/#fd5f51/${button_close_pref}/g"                                          "${THEME_DIR}-xhdpi/xfwm4/close-pressed.svg"
   sed -i "s/#38c76a/${button_max}/g"                                            "${THEME_DIR}-xhdpi/xfwm4/maximize-active.svg"
   sed -i "s/#38c76a/${button_max}/g"                                            "${THEME_DIR}-xhdpi/xfwm4/maximize-prelight.svg"
   sed -i "s/#38c76a/${button_max}/g"                                            "${THEME_DIR}-xhdpi/xfwm4/maximize-pressed.svg"
